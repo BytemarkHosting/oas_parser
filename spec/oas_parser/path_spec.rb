@@ -22,7 +22,7 @@ RSpec.describe OasParser::Path do
     end
 
     it 'ignores keys that are not methods' do
-      allow(@path).to receive(:raw) {{ 'get' => {}, 'post' => {}, 'parameters' => [{}] }}
+      allow(@path).to receive(:raw) { { 'get' => {}, 'post' => {}, 'parameters' => [{}] } }
       expect(@path.endpoints.count).to eq(2)
     end
   end
@@ -36,7 +36,7 @@ RSpec.describe OasParser::Path do
 
   describe '#parameters' do
     it 'returns the path parameters' do
-      allow(@path).to receive(:raw) {{ 'get' => {}, 'post' => {}, 'parameters' => [{}] }}
+      allow(@path).to receive(:raw) { { 'get' => {}, 'post' => {}, 'parameters' => [{}] } }
       expect(@path.parameters.count).to eq(1)
       expect(@path.parameters[0].class).to eq(OasParser::Parameter)
     end
@@ -49,9 +49,9 @@ RSpec.describe OasParser::Path do
 
     context 'when given an invalid method' do
       it 'raises an exception' do
-        expect {
+        expect do
           @path.endpoint_by_method('foo')
-        }.to raise_error(StandardError, 'So such endpoint exists')
+        end.to raise_error(StandardError, 'So such endpoint exists')
       end
     end
   end

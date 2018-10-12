@@ -12,7 +12,7 @@ module OasParser
     end
 
     def success?
-      code.match?(/^2\d\d$/)
+      !!(code =~ /^2\d\d$/)
     end
   end
 end

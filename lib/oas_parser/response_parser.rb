@@ -59,7 +59,7 @@ module OasParser
     def default_xml_options
       {
         dasherize: false,
-        skip_types: true,
+        skip_types: true
       }
     end
 
@@ -74,18 +74,18 @@ module OasParser
 
         if treat_as_object?(root_object)
           # Handle objects with missing type
-          return parse_object(root_object.merge({ 'type' => 'object' }))
+          return parse_object(root_object.merge('type' => 'object'))
         end
 
-        raise StandardError.new("Unhandled object #{root_object} with missing type")
+        raise StandardError, "Unhandled object #{root_object} with missing type"
       else
-        raise StandardError.new("Don't know how to parse #{root_object['type']}")
+        raise StandardError, "Don't know how to parse #{root_object['type']}"
       end
     end
 
     def parse_object(object)
-      raise StandardError.new("Not a hash") unless object.class == Hash
-      raise StandardError.new("Not an object") unless treat_as_object?(object)
+      raise StandardError, 'Not a hash' unless object.class == Hash
+      raise StandardError, 'Not an object' unless treat_as_object?(object)
 
       if object['allOf']
         merged_object = { 'type' => 'object' }
@@ -100,13 +100,9 @@ module OasParser
               o['__attributes'][key] = parameter_value(value)
             end
 
-            if is_xml_text?(value)
-              o['__text'] = parameter_value(value)
-            end
+            o['__text'] = parameter_value(value) if is_xml_text?(value)
 
-            if has_xml_name?(value)
-              key = xml_name(value)
-            end
+            key = xml_name(value) if has_xml_name?(value)
           end
 
           o[key] = parameter_value(value)
@@ -119,16 +115,14 @@ module OasParser
     end
 
     def parse_array(object)
-      raise StandardError.new("Not an array") unless object['type'] == 'array'
+      raise StandardError, 'Not an array' unless object['type'] == 'array'
 
       attributes = {}
 
       if object['properties']
         if @mode == 'xml'
           object['properties'].each do |key, value|
-            if is_xml_attribute?(value)
-              attributes[key] = value
-            end
+            attributes[key] = value if is_xml_attribute?(value)
           end
         end
       end
@@ -150,7 +144,7 @@ module OasParser
             [parse_object(object['items'])]
           end
         else
-          raise StandardError.new("parse_array: Don't know how to parse object")
+          raise StandardError, "parse_array: Don't know how to parse object"
         end
       end
     end
@@ -165,18 +159,15 @@ module OasParser
       when 'object' then return parse_object(parameter)
       when 'array' then return parse_array(parameter)
       else
-        if treat_as_object?(parameter)
-          return parse_object(parameter)
-        end
+        return parse_object(parameter) if treat_as_object?(parameter)
 
         if parameter['type']
-          raise StandardError.new("Can not resolve parameter type of #{parameter['type']}")
+          raise StandardError, "Can not resolve parameter type of #{parameter['type']}"
         else
-          raise StandardError.new("Parameter #{parameter} is missing type.")
+          raise StandardError, "Parameter #{parameter} is missing type."
         end
       end
     end
-
 
     def treat_as_object?(object)
       return true if object['type'] == 'object'

@@ -19,7 +19,7 @@ module OasParser
 
     def endpoint_by_method(method)
       definition = raw[method]
-      raise StandardError.new('So such endpoint exists') unless definition
+      raise StandardError, 'So such endpoint exists' unless definition
       OasParser::Endpoint.new(self, method, definition)
     end
 

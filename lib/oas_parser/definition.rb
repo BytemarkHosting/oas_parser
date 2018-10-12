@@ -28,7 +28,7 @@ module OasParser
 
     def path_by_path(path)
       definition = raw['paths'][path]
-      raise StandardError.new('So such path exists') unless definition
+      raise StandardError, 'So such path exists' unless definition
       OasParser::Path.new(self, path, definition)
     end
 

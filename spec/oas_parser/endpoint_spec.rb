@@ -31,7 +31,7 @@ RSpec.describe OasParser::Endpoint do
 
   describe '#parameters' do
     it 'returns the endpoint parameters' do
-      allow(@path).to receive(:raw) {{ 'parameters' => [{}] }}
+      allow(@path).to receive(:raw) { { 'parameters' => [{}] } }
       expect(@endpoint.parameters.count).to eq(3)
       expect(@endpoint.parameters[0].class).to eq(OasParser::Parameter)
     end
@@ -186,7 +186,7 @@ RSpec.describe OasParser::Endpoint do
     end
 
     it 'returns a RequestBody when there is a request_body' do
-      allow(@endpoint).to receive(:raw) {{ 'requestBody' => {} }}
+      allow(@endpoint).to receive(:raw) { { 'requestBody' => {} } }
       expect(@endpoint.request_body.class).to eq(OasParser::RequestBody)
     end
   end
@@ -198,9 +198,9 @@ RSpec.describe OasParser::Endpoint do
 
     context 'when given an invalid method' do
       it 'raises an exception' do
-        expect {
+        expect do
           @endpoint.response_by_code('foo')
-        }.to raise_error(StandardError, 'So such response exists')
+        end.to raise_error(StandardError, 'So such response exists')
       end
     end
   end
@@ -212,9 +212,9 @@ RSpec.describe OasParser::Endpoint do
 
     context 'when given an invalid name' do
       it 'raises an exception' do
-        expect {
+        expect do
           @endpoint.parameter_by_name('foo')
-        }.to raise_error(StandardError, 'So such parameter exists')
+        end.to raise_error(StandardError, 'So such parameter exists')
       end
     end
   end
@@ -232,9 +232,9 @@ RSpec.describe OasParser::Endpoint do
 
     context 'when given an invalid name' do
       it 'raises an exception' do
-        expect {
+        expect do
           @endpoint.callback_by_name('foo')
-        }.to raise_error(StandardError, 'So such callback exists')
+        end.to raise_error(StandardError, 'So such callback exists')
       end
     end
   end

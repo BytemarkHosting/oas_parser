@@ -35,7 +35,7 @@ module OasParser
       security_schema_parameter_defaults = {
         'type' => 'string',
         'example' => 'abc123',
-        'default' => false,
+        'default' => false
       }
 
       raw_security_schema_parameters.map do |definition|
@@ -49,7 +49,7 @@ module OasParser
         return parameter if parameter.name == name
       end
 
-      raise StandardError.new('So such parameter exists')
+      raise StandardError, 'So such parameter exists'
     end
 
     def request_body
@@ -65,7 +65,7 @@ module OasParser
 
     def response_by_code(code)
       definition = raw['responses'][code]
-      raise StandardError.new('So such response exists') unless definition
+      raise StandardError, 'So such response exists' unless definition
       OasParser::Response.new(self, code, definition)
     end
 
@@ -82,7 +82,7 @@ module OasParser
 
     def callback_by_name(name)
       definition = raw['callbacks'][name]
-      raise StandardError.new('So such callback exists') unless definition
+      raise StandardError, 'So such callback exists' unless definition
       OasParser::Callback.new(self, name, definition)
     end
 
@@ -109,9 +109,7 @@ module OasParser
     def security_schemes
       security_schemes = security.flat_map(&:keys)
 
-      if definition
-        security_schemes = security_schemes + definition.security.flat_map(&:keys)
-      end
+      security_schemes += definition.security.flat_map(&:keys) if definition
 
       security_schemes = security_schemes.uniq
 
