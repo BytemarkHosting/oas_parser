@@ -95,14 +95,14 @@ module OasParser
         o = {}
         object['properties'].each do |key, value|
           if @mode == 'xml'
-            if is_xml_attribute?(value)
+            if xml_attribute?(value)
               o['__attributes'] ||= {}
               o['__attributes'][key] = parameter_value(value)
             end
 
-            o['__text'] = parameter_value(value) if is_xml_text?(value)
+            o['__text'] = parameter_value(value) if xml_text?(value)
 
-            key = xml_name(value) if has_xml_name?(value)
+            key = xml_name(value) if xml_name?(value)
           end
 
           o[key] = parameter_value(value)
@@ -122,7 +122,7 @@ module OasParser
       if object['properties']
         if @mode == 'xml'
           object['properties'].each do |key, value|
-            attributes[key] = value if is_xml_attribute?(value)
+            attributes[key] = value if xml_attribute?(value)
           end
         end
       end
@@ -171,31 +171,27 @@ module OasParser
 
     def treat_as_object?(object)
       return true if object['type'] == 'object'
-      return true if object['allOf']
-      return true if object['oneOf']
-      return true if object['properties']
-      false
+      %w[allOf oneOf properties].any?{ |k| object[k] }
     end
 
-    def has_xml_options?(object)
+    def xml_options?(object)
       object['xml'].present?
     end
 
-    def is_xml_attribute?(object)
-      return false unless has_xml_options?(object)
-      object['xml']['attribute'] || false
+    def xml_attribute?(object)
+      return false unless xml_options?(object)
+      object['xml']['attribute'].present?
     end
 
-    def is_xml_text?(object)
+    def xml_text?(object)
       # See: https://github.com/OAI/OpenAPI-Specification/issues/630#issuecomment-350680346
-      return false unless has_xml_options?(object)
-      return true if object['xml']['text'] || false
-      object['xml']['x-text'] || false
+      return false unless xml_options?(object)
+      %w[text x-text].any? { |k| object['xml'][k] }
     end
 
-    def has_xml_name?(object)
-      return false unless has_xml_options?(object)
-      xml_name(object) || false
+    def xml_name?(object)
+      return false unless xml_options?(object)
+      xml_name(object).present?
     end
 
     def xml_name(object)

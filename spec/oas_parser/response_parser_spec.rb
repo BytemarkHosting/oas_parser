@@ -66,7 +66,7 @@ RSpec.describe OasParser::ResponseParser do
     it 'returns JSON' do
       response = OasParser::ResponseParser.new(@schema).json
 
-      expected_response = <<-HEREDOC
+      expected_response = <<~HEREDOC
         {
           "number": 1.0,
           "street_name": "1 Infinite Loop",
@@ -82,7 +82,7 @@ RSpec.describe OasParser::ResponseParser do
     it 'returns XML' do
       response = OasParser::ResponseParser.new(@schema).xml
 
-      expected_response = <<-HEREDOC
+      expected_response = <<~HEREDOC
         <?xml version="1.0" encoding="UTF-8"?>
         <hash>
           <number>1.0</number>
@@ -125,7 +125,7 @@ RSpec.describe OasParser::ResponseParser do
       it 'includes them as XML attributes' do
         response = OasParser::ResponseParser.new(@schema).xml
 
-        expected_response = <<-HEREDOC
+        expected_response = <<~HEREDOC
           <?xml version="1.0" encoding="UTF-8"?>
           <hash code="1">
             <foo foo="1">
@@ -141,7 +141,7 @@ RSpec.describe OasParser::ResponseParser do
       it 'ignores the attributes' do
         response = OasParser::ResponseParser.new(@schema).json
 
-        expected_response = <<-HEREDOC
+        expected_response = <<~HEREDOC
           {
             "code": 1,
             "foo": {
@@ -190,7 +190,7 @@ RSpec.describe OasParser::ResponseParser do
       it 'includes them as XML attributes' do
         response = OasParser::ResponseParser.new(@schema).xml
 
-        expected_response = <<-HEREDOC
+        expected_response = <<~HEREDOC
           <?xml version="1.0" encoding="UTF-8"?>
           <hash>
             <items quantity="1">
@@ -209,7 +209,7 @@ RSpec.describe OasParser::ResponseParser do
       it 'ignores the attributes' do
         response = OasParser::ResponseParser.new(@schema).json
 
-        expected_response = <<-HEREDOC
+        expected_response = <<~HEREDOC
           {
             "items": [
               {
@@ -248,7 +248,7 @@ RSpec.describe OasParser::ResponseParser do
       it 'does not wrap the value in a property node' do
         response = OasParser::ResponseParser.new(@schema).xml
 
-        expected_response = <<-HEREDOC
+        expected_response = <<~HEREDOC
           <?xml version="1.0" encoding="UTF-8"?>
           <hash>
             <foo>abc123</foo>
@@ -263,7 +263,7 @@ RSpec.describe OasParser::ResponseParser do
       it 'ignores the xml text flag' do
         response = OasParser::ResponseParser.new(@schema).json
 
-        expected_response = <<-HEREDOC
+        expected_response = <<~HEREDOC
           {
             "foo": {
               "bar": "abc123"
@@ -295,7 +295,7 @@ RSpec.describe OasParser::ResponseParser do
       it 'uses the name value as the node' do
         response = OasParser::ResponseParser.new(@schema).xml
 
-        expected_response = <<-HEREDOC
+        expected_response = <<~HEREDOC
           <?xml version="1.0" encoding="UTF-8"?>
           <hash>
             <fooBar>abc123</fooBar>
@@ -310,7 +310,7 @@ RSpec.describe OasParser::ResponseParser do
       it 'ignores the xml name flag' do
         response = OasParser::ResponseParser.new(@schema).json
 
-        expected_response = <<-HEREDOC
+        expected_response = <<~HEREDOC
           {
             "foo_bar": "abc123"
           }

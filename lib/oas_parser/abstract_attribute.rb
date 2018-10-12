@@ -7,7 +7,7 @@ module OasParser
       return default unless format
       case format
       when 'text/xml'
-        has_xml_name? ? xml_name : default
+        xml_name? ? xml_name : default
       else default
       end
     end
@@ -43,25 +43,24 @@ module OasParser
       nil
     end
 
-    def has_xml_options?
+    def xml_options?
       raw['xml'].present?
     end
 
-    def is_xml_attribute?
-      return false unless has_xml_options?
-      raw['xml']['attribute'] || false
+    def xml_attribute?
+      return false unless xml_options?
+      raw['xml']['attribute'].present?
     end
 
-    def is_xml_text?
+    def xml_text?
       # See: https://github.com/OAI/OpenAPI-Specification/issues/630#issuecomment-350680346
-      return false unless has_xml_options?
-      return true if raw['xml']['text'] || false
-      raw['xml']['x-text'] || false
+      return false unless xml_options?
+      %w[text x-text].any? { |k| raw['xml'][k] }
     end
 
-    def has_xml_name?
-      return false unless has_xml_options?
-      xml_name || false
+    def xml_name?
+      return false unless xml_options?
+      xml_name.present?
     end
 
     def xml_name

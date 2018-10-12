@@ -34,7 +34,7 @@ module OasParser
       if fragment.is_a?(Hash) && fragment.key?('$ref')
         ref = fragment['$ref']
 
-        if ref =~ /\Afile:/
+        if ref.start_with?('file:')
           expand_file(ref)
         else
           expand_pointer(ref)
